@@ -1,4 +1,4 @@
-import bcryptjs from "bcryptjs"
+import bcrypt from "bcryptjs"
 import { db } from "../lib/db.js"
 import { UserRole } from "../generated/prisma/index.js"
 import jwt from "jsonwebtoken"
@@ -13,7 +13,7 @@ export const register = async (req, res) => {
         if (exitingUser) {
             return res.status(400).json({ error: "user already exists" })
         }
-        const hashPassword = await bcryptjs.hash(password, 10)
+        const hashPassword = await bcrypt.hash(password, 10)
         const newUser = await db.user.create({
             data: {
                 email,
@@ -63,7 +63,7 @@ export const login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: "user not found" })
         }
-        const isMatch = await bcryptjs.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) {
             return res.status(400).json({ message: "invalid credentail" })
         }
