@@ -53,7 +53,15 @@ export const createProblem = async (req, res) => {
 }
 export const getAllProblems = async (req, res) => {
     try {
-        const problem = await db.problem.findMany()
+        const problem = await db.problem.findMany({
+            include: {
+                solvedBy: {
+                    where: {
+                        userId: req.user.id
+                    }
+                }
+            }
+        })
         if (!problem) {
             return res.status(404).json({ error: "No problems found" });
         }
